@@ -1,0 +1,115 @@
+{
+  "enabled": {
+    "type": "bool",
+    "description": "总开关",
+    "hint": "关闭后不解析卡片、不注入 LLM、也不拦截旧式回显。",
+    "default": true
+  },
+  "inject_priority": {
+    "type": "int",
+    "description": "LLM 请求注入优先级",
+    "hint": "数值越大越先执行；默认 210，比 persona_conductor 的 200 更高，确保卡片内容先进入请求。修改后需重载插件生效。",
+    "default": 210,
+    "slider": {
+      "min": 0,
+      "max": 500,
+      "step": 10
+    }
+  },
+  "inject_hint": {
+    "type": "bool",
+    "description": "注入行为提示",
+    "hint": "在给模型的卡片块里附上「自然接一句 / 可搜索 / 不要复述标题链接」三条提示。",
+    "default": true
+  },
+  "max_cards_per_turn": {
+    "type": "int",
+    "description": "每轮最多处理卡片数",
+    "hint": "同一条消息里多张卡片时只取前 N 张，防止上下文被刷爆。",
+    "default": 3,
+    "slider": {
+      "min": 1,
+      "max": 10,
+      "step": 1
+    }
+  },
+  "log_raw_structure": {
+    "type": "bool",
+    "description": "记录原始卡片结构",
+    "hint": "把收到的 Json 原始数据完整写入日志文件，方便后续补充解析路径。",
+    "default": true
+  },
+  "unknown_structure_log_path": {
+    "type": "string",
+    "description": "未知结构日志文件",
+    "hint": "相对路径会落在插件数据目录 data/plugin_data/astrbot_plugin_card_reader/ 下；也可填绝对路径。",
+    "default": "card_unknown.log"
+  },
+  "sources": {
+    "type": "object",
+    "description": "来源开关",
+    "hint": "按解析出的来源分别开关；关闭的来源不会注入给 LLM。",
+    "items": {
+      "bilibili": {
+        "type": "object",
+        "description": "哔哩哔哩",
+        "hint": "B站视频卡片（bilibili.com / b23.tv）。",
+        "default": {
+          "enable": true
+        },
+        "items": {
+          "enable": {
+            "type": "bool",
+            "description": "启用哔哩哔哩卡片",
+            "hint": "关闭后 B站卡片不进 LLM。",
+            "default": true
+          }
+        }
+      },
+      "xiaohongshu": {
+        "type": "object",
+        "description": "小红书",
+        "hint": "小红书笔记卡片（xiaohongshu.com / xhslink.com）。",
+        "default": {
+          "enable": true
+        },
+        "items": {
+          "enable": {
+            "type": "bool",
+            "description": "启用小红书卡片",
+            "hint": "关闭后小红书卡片不进 LLM。",
+            "default": true
+          }
+        }
+      },
+      "miniapp": {
+        "type": "object",
+        "description": "小程序",
+        "hint": "其它 QQ 小程序卡片（app 含 miniapp）。",
+        "default": {
+          "enable": true
+        },
+        "items": {
+          "enable": {
+            "type": "bool",
+            "description": "启用小程序卡片",
+            "hint": "关闭后其它小程序卡片不进 LLM。",
+            "default": true
+          }
+        }
+      }
+    }
+  },
+  "suppress_legacy_echo": {
+    "type": "bool",
+    "description": "拦截旧式卡片回显",
+    "hint": "astrbot_plugin_bilibili 会把卡片解析成「标题: … 链接: …」直接发给用户；开启后本插件会拦掉这条消息，只把内容注入给 LLM。",
+    "default": true
+  },
+  "empty_card_placeholder": {
+    "type": "string",
+    "description": "纯卡片消息占位文本",
+    "hint": "卡片消息本身没有文字，主 Agent 会跳过 LLM；这里补一句中性占位（≠ 要把标题链接念给用户）。",
+    "default": "（对方分享了一张卡片）"
+  }
+}

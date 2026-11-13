@@ -1,0 +1,14 @@
+name: astrbot_plugin_card_reader
+display_name: 卡片读取
+short_desc: 把 QQ 分享卡片（B站/小红书/音乐）的标题链接注入给 LLM，而不是复述给用户
+desc: >-
+  QQ 分享卡片是 OneBot 的 json 消息段，AstrBot 渲染成 [ComponentType.Json] 后 message_str 为空——主 Agent 要么不回复，要么照着卡片把「标题：…链接：…」念一遍。本插件解析卡片结构，用 extra_user_content_parts + mark_as_temp 把标题/链接注入给 LLM（不落历史），并拦截旧式回显，让模型知道「对方分享了什么」并能用搜索工具跟进。
+version: 0.1.0
+author: xiaoli0412
+repo: https://github.com/xiaoli0412/astrbot_plugin_card_reader
+category: 上下文增强
+tags: [卡片, B站, 小红书, 上下文注入]
+support_platforms:
+  - aiocqhttp
+astrbot_version: '>=4.24,<5'
+license: MIT
